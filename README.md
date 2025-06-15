@@ -7,12 +7,13 @@ This project provides a repeatable, infrastructure-as-code approach to deploying
 
 ## Overview
 
-This repository automates the creation of a virtual machine on an XCP-ng hypervisor via Xen Orchestra. It leverages Terraform and a cloud-init configuration to customize the VM at boot.
+This repository automates the creation of virtual machines on an XCP-ng hypervisor via Xen Orchestra. It leverages Terraform and a cloud-init configuration to customize each VM at boot.
 
 Included features:
 - XO WebSocket API integration
 - cloud-init YAML templating
 - Customizable CPU, memory, and disk allocation
+- Multi-VM provisioning via `count`
 - User setup with password hash
 - Post-deploy package install and test script execution
 
@@ -24,7 +25,7 @@ Included features:
 - A running Xen Orchestra instance
 - A cloud-init compatible template in XO (Debian, Ubuntu, etc.)
 - XO API token for authentication
-- Functional WebSocket access to XO (ws:// or wss://)
+- Functional WebSocket access to XO (`ws://` or `wss://`)
 
 ---
 
@@ -32,16 +33,17 @@ Included features:
 
 ### 1. Clone the repository
 
-```
+```bash
 git clone https://github.com/0xjuang/terraform-xo-vm.git
 cd terraform-xo-vm
 ```
 
 ### 2. Configure your variables
 
-Edit the provided `terraform.tfvars` file:
+Copy and edit the provided `terraform.tfvars.tpl` file:
 
-```
+```bash
+cp terraform.tfvars.tpl terraform.tfvars
 vi terraform.tfvars
 ```
 
@@ -49,9 +51,14 @@ Replace the placeholder values with your actual:
 - `xo_token`: XO API token (from the XO UI)
 - `user_password_hash`: SHA-512 hash generated via `openssl passwd -6`
 - `xo_url`: Your XO server’s WebSocket URL (e.g. `ws://192.168.1.100`)
-- VM parameters: `vm_name`, `vm_user`, `hostname`, `cpu`, `memory_gb`, `disk_gb`
+- `xo_template`: Name or UUID of your XO cloud-init enabled template
+- `vm_description`: Optional VM description in XO
+- `vm_count`: Number of VMs to create (default is 1)
+- `vm_name`, `vm_user`, `hostname`: Naming for the VMs and users
+- `cpu`, `memory_gb`, `disk_gb`: VM resource specs
 
-The file already exists in the repo — no need to rename or copy it.
+> ⚠️ The `.tpl` file is a safe example — you must copy it to `terraform.tfvars` before applying.  
+> Terraform will ignore `.tpl` files by default.
 
 ---
 
@@ -59,13 +66,31 @@ The file already exists in the repo — no need to rename or copy it.
 
 Initialize Terraform and apply the configuration:
 
-```
+```bash
 terraform init
 terraform plan
 terraform apply
 ```
 
-Terraform will create the VM, attach the configured storage and network, and pass in the rendered cloud-init template.
+Terraform will create one or more VMs, attach the configured storage and network, and pass in the rendered cloud-init template.
+
+---
+
+## ⚠️ Resource Warning
+
+Creating multiple VMs consumes CPU, RAM, and storage on your XCP-ng host.  
+Ensure your system has enough free resources before setting `vm_count > 1`.
+
+Example:
+
+```
+3 VMs × 2GB RAM = 6GB required (plus OS and hypervisor overhead)
+```
+
+To avoid overprovisioning:
+- Start with `vm_count = 1`
+- Disable `auto_poweron` if testing multiple VMs
+- Monitor host resources in Xen Orchestra
 
 ---
 
@@ -104,7 +129,7 @@ Terraform will create the VM, attach the configured storage and network, and pas
 terraform-xo-vm/
 ├── main.tf                 # Terraform logic and VM declaration
 ├── variables.tf            # Input variables used by Terraform
-├── terraform.tfvars        # Default variable values to be customized
+├── terraform.tfvars.tpl    # Example tfvars file (copy and edit before applying)
 ├── cloudinit.yaml.tpl      # Cloud-init config template injected at VM creation
 ├── LICENSE                 # MIT license
 ├── README.md               # Project documentation
@@ -115,7 +140,7 @@ terraform-xo-vm/
 ## License
 
 MIT License  
-Copyright (c) 2025 Juan Garcia
+© 2025 Juan J Garcia
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files...
 

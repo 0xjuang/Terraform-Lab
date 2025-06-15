@@ -13,6 +13,33 @@ variable "user_password_hash" {
   sensitive   = true
 }
 
+# Web socket for Xen Orchestra server
+variable "xo_url" {
+    description = "Web socket URL"
+    type        = string
+}
+
+# Name or UUID of the Xen Orchestra template to use
+variable "xo_template" {
+  description = "Name or UUID of the template VM in XO to use as a base"
+  type        = string
+}
+
+# Optional description to assign to the virtual machine.
+# This appears in XO/XCP-ng as the VM's description field.
+# You can override this via tfvars, or leave the default.
+variable "vm_description" {
+  description = "Optional description of the VM"
+  type        = string
+  default     = "Provisioned by Terraform via XO"
+}
+
+variable "vm_count" {
+  description = "Number of virtual machines to create"
+  type        = number
+  default     = 1  # Safe default; can be overridden in terraform.tfvars
+}
+
 # The name of the virtual machine as it will appear in XO/XCP-ng
 variable "vm_name" {
   description = "Name of the VM to create"
@@ -54,3 +81,4 @@ variable "disk_gb" {
   type        = number
   default     = 16
 }
+

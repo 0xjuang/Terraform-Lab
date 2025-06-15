@@ -29,18 +29,17 @@ provider "xenorchestra" {
 
 # Lookup the default Storage Repository (SR) by name
 data "xenorchestra_sr" "default" {
-  name_label = "Local storage"    # Replace with actual SR label in your environment
+  name_label = var.xo_storage
 }
 
 # Lookup the VM template to clone — must be cloud-init enabled and cleaned
 data "xenorchestra_template" "debian" {
-  name_label = var.xo_template    # e.g. "Tmpl-Debian12-CloudInit"
+  name_label = var.xo_template
 }
 
 # Lookup the virtual network by name — usually tied to "eth0"
 data "xenorchestra_network" "default" {
-  name_label = "Pool-wide network associated with eth0"    # Adjust to match your infra
-}
+  name_label = var.xo_network}
 
 # Main VM resource definition
 resource "xenorchestra_vm" "devvm" {

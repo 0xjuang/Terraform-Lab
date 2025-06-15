@@ -19,9 +19,25 @@ variable "xo_url" {
     type        = string
 }
 
-# Name or UUID of the Xen Orchestra template to use
+# The Storage Repository (SR) to attach to the VM's virtual disk.
+# This must match the name_label of an existing SR in XO (e.g. "Local storage").
+variable "xo_storage" {
+  description = "The name_label of the Xen Orchestra Storage Repository (SR) to use"
+  type        = string
+}
+
+# Template used for VM cloning in Xen Orchestra.
+# Should be a cloud-init enabled template that is clean and preconfigured.
+# Accepts either a name_label (e.g., "Tmpl-Debian12-CloudInit") or a UUID.
 variable "xo_template" {
   description = "Name or UUID of the template VM in XO to use as a base"
+  type        = string
+}
+
+# The virtual network to which the VM should be connected.
+# This must match the name_label of an existing network in XO (e.g. "Pool-wide network associated with eth0").
+variable "xo_network" {
+  description = "The name_label of the Xen Orchestra network to attach to the VM"
   type        = string
 }
 

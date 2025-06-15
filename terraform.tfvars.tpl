@@ -15,7 +15,16 @@ user_password_hash = "INSERT_YOUR_SHA512_PASSWORD_HASH_HERE"
 xo_url = "INSERT_YOUR_XO_WEB_SOCKET"
 
 # XO template name used for VM creation
-xo_template = "INSERT_YOUR_XO_TEMPLATE_NAME"
+# Must match a cloud-init enabled template VM in Xen Orchestra
+xo_template = "INSERT_YOU_XO_TEMPLATE_NAME"
+
+# XO Storage Repository (SR) to attach the virtual disk to
+# Must match the name_label of an existing SR in XO (e.g., "Local storage")
+xo_storage  = "INSERT_YOUR_XO_SR_NAME"
+
+# XO virtual network to attach to the VM's NIC
+# Must match the name_label of a network in XO (e.g., tied to eth0)
+xo_network  = "INSERT_YOUR_XO_NETWORK_NAME"
 
 # Description shown in XO for the VM (optional)
 vm_description = "Provisioned by Terraform via XO"

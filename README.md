@@ -1,4 +1,4 @@
-# terraform-xo-vm
+# Terraform-Lab
 
 Provision and manage virtual machines on XCP-ng using Terraform and the Xen Orchestra (XO) API.  
 This project provides a repeatable, infrastructure-as-code approach to deploying VMs with cloud-init on a self-hosted hypervisor.

@@ -34,7 +34,7 @@ Included features:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/0xjuang/terraform-xo-vm.git
+git clone https://github.com/0xjuang/terraform-lab.git
 cd terraform-xo-vm
 ```
 
@@ -126,7 +126,7 @@ To avoid overprovisioning:
 ## File Structure
 
 ```
-terraform-xo-vm/
+terraform-lab/
 ├── main.tf                 # Terraform logic and VM declaration
 ├── variables.tf            # Input variables used by Terraform
 ├── terraform.tfvars.tpl    # Example tfvars file (copy and edit before applying)
